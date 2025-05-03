@@ -27,7 +27,7 @@ public class FilterTaskAuth extends OncePerRequestFilter {
 
         var verifyServlePath = request.getServletPath();
         // verifica se a rota é igual a task
-        if (verifyServlePath.equals("/task")) {
+        if (verifyServlePath.startsWith("/task")) {
             // pega o Authoriztion no header
             var authrization = request.getHeader("Authorization");
             // pega só o Basic
