@@ -1,5 +1,8 @@
 package br.com.theodorol.todolist.service;
 
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,5 +17,10 @@ public class TaskService {
 
     public TaskModel create(TaskModel task) {
         return repository.save(task);
+    }
+
+    public List<TaskModel> findAllTask(UUID useriD) {
+        var tasks = this.repository.findByIdUsers(useriD);
+        return tasks;
     }
 }

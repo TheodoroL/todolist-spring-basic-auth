@@ -1,11 +1,14 @@
 package br.com.theodorol.todolist.controller;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,4 +49,10 @@ public class TaskController {
         return ResponseEntity.ok(service.create(task));
     }
 
+    @GetMapping
+    public ResponseEntity<List<TaskModel>> list(HttpServletRequest request) {
+        var idUser = request.getAttribute("idUsers");
+        var findAllTask = this.service.findAllTask((UUID) idUser);
+        return ResponseEntity.ok(findAllTask);
+    }
 }
