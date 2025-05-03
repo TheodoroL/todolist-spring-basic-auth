@@ -1,5 +1,9 @@
 package br.com.theodorol.todolist.controller;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.theodorol.todolist.model.TaskModel;
 import br.com.theodorol.todolist.service.TaskService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -19,7 +24,25 @@ public class TaskController {
     private final TaskService service;
 
     @PostMapping
-    public ResponseEntity<TaskModel> create(@RequestBody TaskModel task) {
+    public ResponseEntity<?> create(@RequestBody TaskModel task, HttpServletRequest request) {
+
+        var currenDate = LocalDateTime.now();
+
+        if (currenDate.isAfter(task.getStartAt()) || currenDate.isAfter(task.getEndAt())) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("A data de inicio tem que ser maior que a data atual");
+        }
+
+        if (task.getStartAt().isAfter(task.getEndAt())) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("A data de inicio tem que ser menor que data de termino");
+        }
+
+        var idUser = request.getAttribute("idUsers");
+        task.setIdUsers((UUID) idUser);
+
         return ResponseEntity.ok(service.create(task));
     }
 

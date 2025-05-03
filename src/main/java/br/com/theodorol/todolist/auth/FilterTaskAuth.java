@@ -39,16 +39,15 @@ public class FilterTaskAuth extends OncePerRequestFilter {
             String[] decode = new String(authDecoded).split(":");
             // pega o usuário
             String user = decode[0];
-            System.out.println(user);
             // pega a senha
             String password = decode[1];
             UserModel verifyUser = this.iUserRepository.findByUsername(user);
-            System.out.println(verifyServlePath);
             if (!isAuthenticated(password, verifyUser)) {
                 response.sendError(401);
                 return;
             }
 
+            request.setAttribute("idUsers", verifyUser.getId());
         }
         filterChain.doFilter(request, response);
 
