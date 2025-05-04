@@ -59,7 +59,7 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody TaskModel task, HttpServletRequest request) {
-        return ResponseEntity.ok(service.updateTask(id, task, request));
+    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody TaskModel task) {
+        return ResponseEntity.ok(service.updateTask(id, task));
     }
 }

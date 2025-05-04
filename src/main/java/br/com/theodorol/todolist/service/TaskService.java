@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.theodorol.todolist.model.TaskModel;
 import br.com.theodorol.todolist.repository.ITaskRepository;
+import br.com.theodorol.todolist.utils.Utils;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Service
@@ -25,11 +26,9 @@ public class TaskService {
         return tasks;
     }
 
-    public TaskModel updateTask(UUID id, TaskModel task, HttpServletRequest request) {
-        var userId = request.getAttribute("idUsers");
-        task.setId(id);
-        task.setIdUsers((UUID) userId);
-        task.setCreatedAt(LocalDateTime.now());
+    public TaskModel updateTask(UUID id, TaskModel taskUpdate) {
+        var task = this.repository.findById(id).orElseThrow(() -> new RuntimeException(""));
+        Utils.getNonNullProperties(taskUpdate, task);
         return this.repository.save(task);
     }
 }
