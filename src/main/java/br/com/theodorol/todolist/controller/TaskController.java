@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.theodorol.todolist.controller.dto.TaskResponseDTO;
 import br.com.theodorol.todolist.model.TaskModel;
 import br.com.theodorol.todolist.service.TaskService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,8 +47,12 @@ public class TaskController {
 
         var idUser = request.getAttribute("idUsers");
         task.setIdUsers((UUID) idUser);
-
-        return ResponseEntity.ok(service.create(task));
+        var taskCreate = service.create(task);
+        var taskResponse = new TaskResponseDTO(taskCreate.getId(), taskCreate.getTitle(),
+                taskCreate.getDescription(),
+                taskCreate.getStartAt(), taskCreate.getEndAt(),
+                taskCreate.getPriority(), taskCreate.getIdUsers());
+        return ResponseEntity.ok(taskResponse);
     }
 
     @GetMapping

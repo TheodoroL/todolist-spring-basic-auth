@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.theodorol.todolist.controller.dto.UserResponseDTO;
 import br.com.theodorol.todolist.model.UserModel;
 import br.com.theodorol.todolist.service.UserService;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,8 @@ public class UserController {
     public ResponseEntity<?> create(@RequestBody UserModel users) {
         try {
             var userCreated = service.create(users);
-            return ResponseEntity.status(HttpStatus.CREATED).body(userCreated);
+            var userResponse = new UserResponseDTO(userCreated.getId(), userCreated.getUsername());
+            return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
 
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
