@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.theodorol.todolist.model.TaskModel;
 import br.com.theodorol.todolist.service.TaskService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -59,7 +58,14 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody TaskModel task) {
-        return ResponseEntity.ok(service.updateTask(id, task));
+    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody TaskModel task, HttpServletRequest request) {
+        try {
+
+            return ResponseEntity.ok(service.updateTask(id, task, request));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
+
+        }
     }
 }

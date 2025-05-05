@@ -1,6 +1,5 @@
 package br.com.theodorol.todolist.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,8 +25,13 @@ public class TaskService {
         return tasks;
     }
 
-    public TaskModel updateTask(UUID id, TaskModel taskUpdate) {
-        var task = this.repository.findById(id).orElseThrow(() -> new RuntimeException(""));
+    public TaskModel updateTask(UUID id, TaskModel taskUpdate, HttpServletRequest request) throws RuntimeException {
+        TaskModel task = this.repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Essa tarefa não existe"));
+
+        if (!task.getIdUsers().equals((UUID) request.getAttribute("idUsers"))) {
+            throw new RuntimeException("O usuário não tem permissão para alterar essa tarefa!");
+        }
         Utils.getNonNullProperties(taskUpdate, task);
         return this.repository.save(task);
     }
